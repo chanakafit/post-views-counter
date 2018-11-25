@@ -256,11 +256,12 @@ if ( ! function_exists( 'pvc_get_views' ) ) {
  * 
  * @param  int|array $post_id
  * @param bool $display
+ * @param bool $block
  * @return mixed
  */
 if ( ! function_exists( 'pvc_post_views' ) ) {
 
-	function pvc_post_views( $post_id = 0, $echo = true ) {
+	function pvc_post_views( $post_id = 0, $echo = true, $block = true ) {
 
 		// get all data
 		$post_id = (int) ( empty( $post_id ) ? get_the_ID() : $post_id );
@@ -276,13 +277,23 @@ if ( ! function_exists( 'pvc_post_views' ) ) {
 		
 		$icon = apply_filters( 'pvc_post_views_icon', '<span class="post-views-icon ' . $icon_class . '"></span>', $post_id );
 
-		$html = apply_filters(
-			'pvc_post_views_html', '<div class="post-views post-' . $post_id . ' entry-meta">
-			' . ($options['display_style']['icon'] && $icon_class !== '' ? $icon : '') . '
-			' . ($options['display_style']['text'] ? '<span class="post-views-label">' . $label . ' </span>' : '') . '
-			<span class="post-views-count">' . number_format_i18n( $views ) . '</span>
-			</div>', $post_id, $views, $label, $icon
-		);
+		if($block){
+            		$html = apply_filters(
+                		'pvc_post_views_html', '<div class="post-views post-' . $post_id . ' entry-meta">
+				' . ($options['display_style']['icon'] && $icon_class !== '' ? $icon : '') . '
+				' . ($options['display_style']['text'] ? '<span class="post-views-label">' . $label . ' </span>' : '') . '
+				<span class="post-views-count">' . number_format_i18n( $views ) . '</span>
+				</div>', $post_id, $views, $label, $icon
+            		);
+        	}else{
+            		$html = apply_filters(
+                		'pvc_post_views_html', '<span class="post-views post-' . $post_id . ' entry-meta">
+				' . ($options['display_style']['icon'] && $icon_class !== '' ? $icon : '') . '
+				' . ($options['display_style']['text'] ? '<span class="post-views-label">' . $label . ' </span>' : '') . '
+				<span class="post-views-count">' . number_format_i18n( $views ) . '</span>
+				</span>', $post_id, $views, $label, $icon
+            		);
+        	}
 
 		if ( $echo )
 			echo $html;
